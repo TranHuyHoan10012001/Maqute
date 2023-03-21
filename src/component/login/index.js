@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
-import { Button, Input, Space, Alert } from "antd";
+import { Button, Input, Space } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -8,27 +9,20 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import loginImage from "../image/loginImageLeft.jpg";
-import "../css/login.css";
+import loginImage from "../../image/loginImageLeft.jpg";
+import "../../css/login.css"
 
-export const Resgister = () => {
+export const Login = () => {
   const onChangeEmail = (value) => setEmail(value);
   const onChangePassword = (value) => setPassword(value);
-  const onChangePasswordConfirm = (value) => setPasswordConfirm(value);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [isMatchPassword, setIsMatchPassword] = useState(false);
   const navigate = useNavigate();
   const onSubmit = (e) => {
     e.preventDefault();
-    navigate("/");
+    navigate("/home");
   };
-
-  useEffect(() => {
-    if (password !== passwordConfirm) setIsMatchPassword(false);
-    else setIsMatchPassword(true);
-  }, [password, passwordConfirm]);
+  const [isShowPassword, setIsShowPassword] = useState(false);
 
   return (
     <div className="loginContainer" style={{ display: "flex" }}>
@@ -54,7 +48,7 @@ export const Resgister = () => {
         }}
       >
         <div className="header" style={{ display: "flex" }}>
-          <h1>Đăng kí tài khoản</h1>
+          <h1>Đăng nhập</h1>
         </div>
         <form
           style={{
@@ -99,34 +93,9 @@ export const Resgister = () => {
                 onChange={(e) => onChangePassword(e.target.value)}
               />
             </Space>
-          </div>
-          <div
-            className="passwordConfirm"
-            style={{ display: "flex", flexDirection: "column" }}
-          >
-            <label
-              style={{ fontWeight: "bold", marginBottom: 8, marginTop: 20 }}
-            >
-              Xác thực mật khẩu
-            </label>
-            <Space direction="vertical">
-              <Input.Password
-                placeholder="Xác thực nhập mật khẩu"
-                prefix={<LockOutlined />}
-                iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
-                style={{ minWidth: 400 }}
-                value={passwordConfirm}
-                onChange={(e) => onChangePasswordConfirm(e.target.value)}
-              />
-
-              {isMatchPassword ? (
-                <Alert message="Mật khẩu trùng khớp" type="success" showIcon />
-              ) : (
-                <Alert message="Mật khẩu không khớp" type="error" showIcon />
-              )}
-            </Space>
+            <a href="/forgotPassword" style={{ marginTop: 9 }}>
+              Quên mật khẩu
+            </a>
           </div>
         </form>
         <Button
@@ -134,10 +103,13 @@ export const Resgister = () => {
           htmlType="submit"
           onClick={onSubmit}
           style={{ width: "30%" }}
-          disabled={!isMatchPassword || !passwordConfirm || !email}
         >
-          Đăng kí
+          Đăng nhập
         </Button>
+        <div className="registerQuestion" style={{ marginTop: 15 }}>
+          Nếu chưa có tài khoản?
+          <a href="/register"> Đăng kí tài khoản</a>
+        </div>
       </div>
     </div>
   );

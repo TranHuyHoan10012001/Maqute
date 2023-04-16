@@ -1,0 +1,15 @@
+.addQuestionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 10px;
+  /* margin-bottom: 10px; */
+}
+.addQuestionButton {
+  display: flex;
+  justify-content: center;
+}
+
+.key {
+  margin-bottom: 10px;
+}

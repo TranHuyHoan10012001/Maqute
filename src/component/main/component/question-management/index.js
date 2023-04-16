@@ -1,5 +1,6 @@
-import React from "react";
-import "../../css/question-management.css";
+/* eslint-disable array-callback-return */
+import React, { useEffect, useState } from "react";
+import "../../../../css/question-management.css";
 import {
   CloudUploadOutlined,
   EditOutlined,
@@ -7,11 +8,43 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Table } from "antd";
+import { useNavigate } from "react-router-dom";
+import { handleQuestionListApi } from "../../../../services/questionService";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 
 const QuestionManagementComponent = () => {
+  const [listQuestionsData, setListQuestionsData] = useState();
+  const navigate = useNavigate();
+  const handleOnclickViewQuestion = () => {
+    navigate("/question-management/detail");
+  };
+  const handleOnClickTypeQuestion = () => {
+    navigate("/question-management/type-question");
+  };
+  const getAllQuestion = async () => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let allQuestionsData = await handleQuestionListApi();
+    setListQuestionsData(allQuestionsData);
+  };
+  const dataRow = [];
+
+  useEffect(() => {
+    getAllQuestion();
+  }, []);
+  listQuestionsData?.questions.forEach((question) => {
+    let questionContent = question.content.replace(/<[^>]+>/g, "");
+    dataRow.push({
+      questionId: question.id,
+      question: questionContent,
+      subject: question.subject,
+      category: question.category,
+      level: question.level,
+    });
+  });
+
+  console.log("dataRow: ", dataRow);
   const columns = [
     {
       title: "STT",
@@ -83,37 +116,14 @@ const QuestionManagementComponent = () => {
       dataIndex: "",
       key: "action",
       render: () => (
-        <div style={{ display: "flex", gap: 10 }}>
-          <EyeOutlined />
-          <EditOutlined />
+        <div style={{ display: "flex", gap: 20 }}>
+          <EyeOutlined onClick={handleOnclickViewQuestion} />
           <DeleteOutlined />
         </div>
       ),
     },
   ];
-  const data = [
-    {
-      questionId: "1",
-      question: "Giá trị biểu thức nào dưới đây bằng 0,0000000375?",
-      subject: "Toán",
-      category: "Trắc nghiệm",
-      level: "Thông hiểu",
-    },
-    {
-      questionId: "2",
-      question: "What does he ________ for a living?",
-      subject: "Tiếng Anh",
-      category: "Trắc nghiệm",
-      level: "Vận dụng",
-    },
-    {
-      questionId: "3",
-      question: `Ai là "Nhân vật thể thao của năm" của BBC năm 2001?`,
-      subject: "Thể chất",
-      category: "Tự luận",
-      level: "Vận dụng cao",
-    },
-  ];
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -125,7 +135,9 @@ const QuestionManagementComponent = () => {
             <Button icon={<CloudUploadOutlined />}>Tải file lên</Button>
           </div>
           <div className="writeQuestion">
-            <Button icon={<EditOutlined />}>Nhập câu hỏi</Button>
+            <Button icon={<EditOutlined />} onClick={handleOnClickTypeQuestion}>
+              Nhập câu hỏi
+            </Button>
           </div>
         </div>
         <div className="rightPath">
@@ -141,7 +153,7 @@ const QuestionManagementComponent = () => {
         </div>
       </div>
       <div className="listQuestion">
-        <Table columns={columns} dataSource={data} onChange={onChange} />
+        <Table columns={columns} dataSource={dataRow} onChange={onChange} />
       </div>
     </div>
   );

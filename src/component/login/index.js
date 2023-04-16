@@ -10,17 +10,35 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import loginImage from "../../image/loginImageLeft.jpg";
-import "../../css/login.css"
+import "../../css/login.css";
+import { handleUserLoginApi } from "../../services/userServices";
 
 export const Login = () => {
   const onChangeEmail = (value) => setEmail(value);
   const onChangePassword = (value) => setPassword(value);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    navigate("/home");
+    setErrorMessage("");
+    try {
+      let userData = await handleUserLoginApi(email, password);
+      if (userData && userData.errorCode !== 0)
+        setErrorMessage(userData.message);
+
+      if (userData && userData.errorCode === 0) {
+        navigate("/");
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.data) {
+          setErrorMessage(error.response.data.message);
+        }
+      }
+    }
+    console.log(errorMessage);
   };
   const [isShowPassword, setIsShowPassword] = useState(false);
 
@@ -93,11 +111,13 @@ export const Login = () => {
                 onChange={(e) => onChangePassword(e.target.value)}
               />
             </Space>
+            <div className="errorLogin">{errorMessage}</div>
             <a href="/forgotPassword" style={{ marginTop: 9 }}>
               Quên mật khẩu
             </a>
           </div>
         </form>
+
         <Button
           type="primary"
           htmlType="submit"

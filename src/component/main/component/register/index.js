@@ -8,25 +8,51 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import loginImage from "../../image/loginImageLeft.jpg";
-import "../../css/login.css";
+import loginImage from "../../../../image/loginImageLeft.jpg";
+import "../../../../css/login.css";
+import { handleUserRegisterApi } from "../../../../services/userServices";
 
 export const Resgister = () => {
   const onChangeEmail = (value) => setEmail(value);
   const onChangePassword = (value) => setPassword(value);
   const onChangePasswordConfirm = (value) => setPasswordConfirm(value);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isMatchPassword, setIsMatchPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const onSubmit = (e) => {
+  const onSubmitRegister = async (e) => {
     e.preventDefault();
-    navigate("/");
+    setErrorMessage("");
+    try {
+      let newUserData = await handleUserRegisterApi(
+        email,
+        password,
+        firstName,
+        lastName
+      );
+      console.log("newUserData: ", newUserData);
+      if (newUserData && newUserData.errorCode !== 0) {
+        setErrorMessage(newUserData.message);
+      }
+      if (newUserData && newUserData.errorCode === 0) {
+        alert("Đăng kí tài khoản thành công");
+        navigate("/");
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.data) {
+          setErrorMessage(error.response.data.message);
+        }
+      }
+    }
   };
 
   useEffect(() => {
-    if (password !== passwordConfirm) setIsMatchPassword(false);
+    if (password && password !== passwordConfirm) setIsMatchPassword(false);
     else setIsMatchPassword(true);
   }, [password, passwordConfirm]);
 
@@ -79,6 +105,43 @@ export const Resgister = () => {
             </Space>
           </div>
           <div
+            className="firstName"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginTop: "5px",
+            }}
+          >
+            <label style={{ fontWeight: "bold", marginBottom: 8 }}>Họ</label>
+            <Space direction="vertical">
+              <Input
+                placeholder="Vui lòng nhập họ"
+                style={{ minWidth: 400 }}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </Space>
+          </div>
+          <div
+            className="lastName"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginTop: "5px",
+            }}
+          >
+            <label style={{ fontWeight: "bold", marginBottom: 8 }}>Tên</label>
+            <Space direction="vertical">
+              <Input
+                placeholder="Vui lòng nhập tên"
+                style={{ minWidth: 400 }}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </Space>
+          </div>
+
+          <div
             className="password"
             style={{ display: "flex", flexDirection: "column" }}
           >
@@ -128,11 +191,12 @@ export const Resgister = () => {
               )}
             </Space>
           </div>
+          <div className="errorMessage">{errorMessage}</div>
         </form>
         <Button
           type="primary"
           htmlType="submit"
-          onClick={onSubmit}
+          onClick={onSubmitRegister}
           style={{ width: "30%" }}
           disabled={!isMatchPassword || !passwordConfirm || !email}
         >

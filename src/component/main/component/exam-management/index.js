@@ -1,5 +1,5 @@
 import React from "react";
-import "../../css/question-management.css";
+import "../../../../css/question-management.css";
 import {
   CloudUploadOutlined,
   EditOutlined,
@@ -7,10 +7,17 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Table } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 const ExamManagementComponent = () => {
+  const { id } = useParams();
+  console.log("id: ", id);
+  const navigate = useNavigate();
+  const handleOnClickExamDetail = (examId) => {
+    navigate(`/exam-detail/${examId}`);
+  };
   const columns = [
     {
       title: "STT",
@@ -63,10 +70,9 @@ const ExamManagementComponent = () => {
       title: "Action",
       dataIndex: "",
       key: "action",
-      render: () => (
-        <div style={{ display: "flex", gap: 10 }}>
-          <EyeOutlined />
-          <EditOutlined />
+      render: (row) => (
+        <div style={{ display: "flex", gap: 20 }}>
+          <EyeOutlined onClick={() => handleOnClickExamDetail(row.examId)} />
           <DeleteOutlined />
         </div>
       ),

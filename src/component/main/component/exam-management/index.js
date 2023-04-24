@@ -1,5 +1,6 @@
 import React from "react";
 import "../../../../css/question-management.css";
+import { handleGetAllExamApi } from "../../../../services/examService";
 import {
   CloudUploadOutlined,
   EditOutlined,
@@ -8,16 +9,39 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Table } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 const ExamManagementComponent = () => {
   const { id } = useParams();
   console.log("id: ", id);
+  const [listExams, setListExams] = useState();
   const navigate = useNavigate();
   const handleOnClickExamDetail = (examId) => {
     navigate(`/exam-detail/${examId}`);
   };
+  const handleGetAllExam = async () => {
+    let allExamsData = await handleGetAllExamApi();
+    setListExams(allExamsData);
+  };
+
+  const dataRow = [];
+  useEffect(() => {
+    handleGetAllExam();
+  }, []);
+  listExams?.listExam.forEach((exam) => {
+    dataRow.push({
+      examId: exam.id,
+      exam: `Đề số ${exam.id}`,
+      subject: exam.subject,
+      category: exam.category,
+    });
+  });
+
+  console.log("listExams: ", dataRow);
+
   const columns = [
     {
       title: "STT",
@@ -78,26 +102,6 @@ const ExamManagementComponent = () => {
       ),
     },
   ];
-  const data = [
-    {
-      examId: "1",
-      exam: "Đề số 1",
-      subject: "Toán",
-      category: "Trắc nghiệm",
-    },
-    {
-      examId: "2",
-      exam: "Đề số 2",
-      subject: "Tiếng Anh",
-      category: "Trắc nghiệm",
-    },
-    {
-      examId: "3",
-      exam: `Đề số 3`,
-      subject: "Thể chất",
-      category: "Tự luận",
-    },
-  ];
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -125,7 +129,7 @@ const ExamManagementComponent = () => {
         </div>
       </div>
       <div className="listQuestion">
-        <Table columns={columns} dataSource={data} onChange={onChange} />
+        <Table columns={columns} dataSource={dataRow} onChange={onChange} />
       </div>
     </div>
   );

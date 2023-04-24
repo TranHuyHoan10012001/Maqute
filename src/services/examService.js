@@ -4,4 +4,8 @@ const handleGetExamByIdApi = (id) => {
   return axios.get(`/api/get-exam?id=${id}`);
 };
 
-export default handleGetExamByIdApi;
+const handleGetAllExamApi = () => {
+  return axios.get("/api/list-exams");
+};
+
+export { handleGetExamByIdApi, handleGetAllExamApi };

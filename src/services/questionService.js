@@ -13,4 +13,8 @@ const handleQuestionListApi = () => {
   return axios.get("/api/list-questions");
 };
 
-export { handleQuestionAddApi, handleQuestionListApi };
+const handleDeleteQuestionApi = (questionId) => {
+  return axios.delete("/api/delete-question", { data: { id: questionId } });
+};
+
+export { handleQuestionAddApi, handleQuestionListApi, handleDeleteQuestionApi };

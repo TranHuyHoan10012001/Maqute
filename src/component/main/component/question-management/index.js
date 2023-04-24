@@ -9,7 +9,10 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Table } from "antd";
 import { useNavigate } from "react-router-dom";
-import { handleQuestionListApi } from "../../../../services/questionService";
+import {
+  handleDeleteQuestionApi,
+  handleQuestionListApi,
+} from "../../../../services/questionService";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
@@ -23,12 +26,23 @@ const QuestionManagementComponent = () => {
   const handleOnClickTypeQuestion = () => {
     navigate("/question-management/type-question");
   };
+  const dataRow = [];
+
   const getAllQuestion = async () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     let allQuestionsData = await handleQuestionListApi();
     setListQuestionsData(allQuestionsData);
   };
-  const dataRow = [];
+  const handleDeleteQuestion = async (questionId) => {
+    try {
+      let res = await handleDeleteQuestionApi(questionId);
+      if (res && res.errCode === 0) {
+        await getAllQuestion();
+      } else alert(res.errMessage);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getAllQuestion();
@@ -115,10 +129,12 @@ const QuestionManagementComponent = () => {
       title: "Action",
       dataIndex: "",
       key: "action",
-      render: () => (
+      render: (row) => (
         <div style={{ display: "flex", gap: 20 }}>
           <EyeOutlined onClick={handleOnclickViewQuestion} />
-          <DeleteOutlined />
+          <DeleteOutlined
+            onClick={() => handleDeleteQuestion(row.questionId)}
+          />
         </div>
       ),
     },

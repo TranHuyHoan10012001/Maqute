@@ -1,55 +1,26 @@
-/* eslint-disable jsx-a11y/alt-text */
-import { Button, Input, Space, Alert, notification } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
-  MailOutlined,
   LockOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
+import { Alert, Button, Input, Space } from "antd";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import loginImage from "../../../../image/loginImageLeft.jpg";
-import "../../../../css/login.css";
-import { handleUserRegisterApi } from "../../../../services/userServices";
-
-export const Resgister = () => {
-  const openNotification = () => {
-    const args = {
-      message: "Thông báo",
-      description: "Đăng ký tài khoản thành công",
-      duration: 1,
-    };
-    notification.open(args);
-  };
+import "../../../css/login.css";
+import loginImage from "../../../image/loginImageLeft.jpg";
+export const ChangePassword = () => {
   const onChangeEmail = (value) => setEmail(value);
   const onChangePassword = (value) => setPassword(value);
   const onChangePasswordConfirm = (value) => setPasswordConfirm(value);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isMatchPassword, setIsMatchPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
   const onSubmitRegister = async (e) => {
     e.preventDefault();
     setErrorMessage("");
     try {
-      let newUserData = await handleUserRegisterApi(
-        email,
-        password,
-        firstName,
-        lastName
-      );
-      console.log("newUserData: ", newUserData);
-      if (newUserData && newUserData.errorCode !== 0) {
-        setErrorMessage(newUserData.message);
-      }
-      if (newUserData && newUserData.errorCode === 0) {
-        openNotification();
-        navigate("/");
-      }
     } catch (error) {
       if (error.response) {
         if (error.response.data) {
@@ -68,6 +39,7 @@ export const Resgister = () => {
     <div className="loginContainer" style={{ display: "flex" }}>
       <div className="leftPath" style={{ width: "50%", height: "100%" }}>
         <img
+          alt="loginImage"
           src={loginImage}
           style={{
             borderRadius: "0 50% 50% 0%",
@@ -88,7 +60,7 @@ export const Resgister = () => {
         }}
       >
         <div className="header" style={{ display: "flex" }}>
-          <h1>Đăng kí tài khoản</h1>
+          <h1>Thay đổi mật khẩu</h1>
         </div>
         <form
           style={{
@@ -113,42 +85,27 @@ export const Resgister = () => {
             </Space>
           </div>
           <div
-            className="firstName"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              marginTop: "5px",
-            }}
+            className="password"
+            style={{ display: "flex", flexDirection: "column" }}
           >
-            <label style={{ fontWeight: "bold", marginBottom: 8 }}>Họ</label>
+            <label
+              style={{ fontWeight: "bold", marginBottom: 8, marginTop: 20 }}
+            >
+              Mật khẩu cũ
+            </label>
             <Space direction="vertical">
-              <Input
-                placeholder="Vui lòng nhập họ"
+              <Input.Password
+                placeholder="Vui lòng nhập mật khẩu"
+                prefix={<LockOutlined />}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
                 style={{ minWidth: 400 }}
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={password}
+                onChange={(e) => onChangePassword(e.target.value)}
               />
             </Space>
           </div>
-          <div
-            className="lastName"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              marginTop: "5px",
-            }}
-          >
-            <label style={{ fontWeight: "bold", marginBottom: 8 }}>Tên</label>
-            <Space direction="vertical">
-              <Input
-                placeholder="Vui lòng nhập tên"
-                style={{ minWidth: 400 }}
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </Space>
-          </div>
-
           <div
             className="password"
             style={{ display: "flex", flexDirection: "column" }}
@@ -156,7 +113,7 @@ export const Resgister = () => {
             <label
               style={{ fontWeight: "bold", marginBottom: 8, marginTop: 20 }}
             >
-              Mật khẩu
+              Mật khẩu mới
             </label>
             <Space direction="vertical">
               <Input.Password
@@ -208,7 +165,7 @@ export const Resgister = () => {
           style={{ width: "30%" }}
           disabled={!isMatchPassword || !passwordConfirm || !email}
         >
-          Đăng kí
+          Thay đổi mật khẩu
         </Button>
       </div>
     </div>

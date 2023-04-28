@@ -1,49 +1,20 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
-import { Button, Input, Space, notification } from "antd";
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  MailOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
-import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import loginImage from "../../image/loginImageLeft.jpg";
-import "../../css/login.css";
-import { handleUserLoginApi } from "../../services/userServices";
-const Context = React.createContext({
-  name: "Default",
-});
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Button, Input, Space } from "antd";
+import React, { useState } from "react";
+import "../../../css/login.css";
+import loginImage from "../../../image/loginImageLeft.jpg";
 
-export const Login = () => {
-  const openNotification = () => {
-    const args = {
-      message: "Thông báo",
-      description: "Đăng nhập thành công",
-      duration: 1,
-    };
-    notification.open(args);
-  };
+const ForgotPassword = () => {
   const onChangeEmail = (value) => setEmail(value);
   const onChangePassword = (value) => setPassword(value);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
   const onSubmit = async (e) => {
     e.preventDefault();
-
     setErrorMessage("");
     try {
-      let userData = await handleUserLoginApi(email, password);
-      if (userData && userData.errorCode !== 0)
-        setErrorMessage(userData.message);
-
-      if (userData && userData.errorCode === 0) {
-        navigate("/");
-        openNotification();
-      }
     } catch (error) {
       if (error.response) {
         if (error.response.data) {
@@ -78,7 +49,7 @@ export const Login = () => {
         }}
       >
         <div className="header" style={{ display: "flex" }}>
-          <h1>Đăng nhập</h1>
+          <h1>Quên mật khẩu</h1>
         </div>
         <form
           style={{
@@ -103,29 +74,26 @@ export const Login = () => {
             </Space>
           </div>
           <div
-            className="password"
+            className="code"
             style={{ display: "flex", flexDirection: "column" }}
           >
             <label
               style={{ fontWeight: "bold", marginBottom: 8, marginTop: 20 }}
             >
-              Mật khẩu
+              Mã xác nhận
             </label>
             <Space direction="vertical">
-              <Input.Password
-                placeholder="Vui lòng nhập mật khẩu"
+              <Input
+                placeholder="Vui lòng nhập mã xác nhận"
                 prefix={<LockOutlined />}
-                iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
                 style={{ minWidth: 400 }}
                 value={password}
                 onChange={(e) => onChangePassword(e.target.value)}
               />
             </Space>
             <div className="errorLogin">{errorMessage}</div>
-            <a href="/forgotPassword" style={{ marginTop: 9 }}>
-              Quên mật khẩu
+            <a href="#" style={{ marginTop: 9 }}>
+              Gửi lại mã xác nhận
             </a>
           </div>
         </form>
@@ -136,13 +104,11 @@ export const Login = () => {
           onClick={onSubmit}
           style={{ width: "30%" }}
         >
-          Đăng nhập
+          Xác nhận mật khẩu
         </Button>
-        <div className="registerQuestion" style={{ marginTop: 15 }}>
-          Nếu chưa có tài khoản?
-          <a href="/register"> Đăng kí tài khoản</a>
-        </div>
       </div>
     </div>
   );
 };
+
+export default ForgotPassword;

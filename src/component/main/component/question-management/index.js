@@ -7,7 +7,7 @@ import {
   EyeOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Table } from "antd";
+import { Button, Input, Popconfirm, Table } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   handleDeleteQuestionApi,
@@ -38,6 +38,7 @@ const QuestionManagementComponent = () => {
       let res = await handleDeleteQuestionApi(questionId);
       if (res && res.errCode === 0) {
         await getAllQuestion();
+        alert("Xóa câu hỏi thành công");
       } else alert(res.errMessage);
     } catch (error) {
       console.log(error);
@@ -130,11 +131,18 @@ const QuestionManagementComponent = () => {
       dataIndex: "",
       key: "action",
       render: (row) => (
-        <div style={{ display: "flex", gap: 20 }}>
+        <div className="action">
           <EyeOutlined onClick={handleOnclickViewQuestion} />
-          <DeleteOutlined
-            onClick={() => handleDeleteQuestion(row.questionId)}
-          />
+          <Popconfirm
+            title="Bạn có muốn xóa câu hỏi này không?"
+            onConfirm={(e) => handleDeleteQuestion(row.questionId)}
+            onCancel={(e) => console.log("No")}
+            okText="Đồng ý"
+            cancelText="Không đồng ý"
+            className="pop-confirm"
+          >
+            <DeleteOutlined />
+          </Popconfirm>
         </div>
       ),
     },

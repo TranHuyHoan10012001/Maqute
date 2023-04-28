@@ -22,3 +22,11 @@
   width: auto;
   margin-left: 20px;
 }
+
+.action {
+  display: flex;
+  gap: 20px;
+}
+.ant-popconfirm {
+  min-width: max-content;
+}

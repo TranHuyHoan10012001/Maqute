@@ -7,7 +7,7 @@ import {
   EyeOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Table } from "antd";
+import { Button, Input, Popconfirm, Table } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -19,6 +19,7 @@ const ExamManagementComponent = () => {
   console.log("id: ", id);
   const [listExams, setListExams] = useState();
   const navigate = useNavigate();
+
   const handleOnClickExamDetail = (examId) => {
     navigate(`/exam-detail/${examId}`);
   };
@@ -96,8 +97,17 @@ const ExamManagementComponent = () => {
       key: "action",
       render: (row) => (
         <div style={{ display: "flex", gap: 20 }}>
-          <EyeOutlined onClick={() => handleOnClickExamDetail(row.examId)} />
-          <DeleteOutlined />
+          <EyeOutlined onClick={(e) => handleOnClickExamDetail(row.examId)} />
+          <Popconfirm
+            title="Xóa đề thi"
+            description="Bạn có muốn xóa đề thi này không?"
+            onConfirm={(e) => console.log("Ok")}
+            onCancel={(e) => console.log("No")}
+            okText="Đồng ý"
+            cancelText="Không đồng ý"
+          >
+            <DeleteOutlined />
+          </Popconfirm>
         </div>
       ),
     },

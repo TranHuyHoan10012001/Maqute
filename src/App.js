@@ -31,7 +31,7 @@ function App() {
             element={<QuestionManagementComponent />}
           />
           <Route
-            path="/question-management/detail"
+            path="/question-management/detail/:id"
             element={<QuestionDetail />}
           />
           <Route

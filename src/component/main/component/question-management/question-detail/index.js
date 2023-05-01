@@ -10,29 +10,10 @@ import {
 } from "antd";
 import "../../../../../css/question-detail.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-const originData = [
-  {
-    key: "question",
-    name: "Giá trị biểu thức nào dưới đây bằng 0,0000000375?",
-  },
-  {
-    key: "answer1",
-    name: "A. 1",
-  },
-  {
-    key: "answer2",
-    name: "B. 1",
-  },
-  {
-    key: "answer3",
-    name: "C. 1",
-  },
-  {
-    key: "answer4",
-    name: "D. 1",
-  },
-];
+import { useNavigate, useParams } from "react-router-dom";
+import { handleGetQuestionByIdApi } from "../../../../../services/questionService";
+import { useEffect } from "react";
+
 const EditableCell = ({
   editing,
   dataIndex,
@@ -68,11 +49,16 @@ const EditableCell = ({
   );
 };
 const QuestionDetail = () => {
+  const { id } = useParams();
+  const [questionDetailData, setQuestionDetailData] = useState();
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState();
   const [editingKey, setEditingKey] = useState("");
   const isEditing = (record) => record.key === editingKey;
   const navigate = useNavigate();
+  const [loading, setLoading] = useState();
+  let dataRow = [];
+
   const edit = (record) => {
     form.setFieldsValue({
       name: "",
@@ -84,13 +70,19 @@ const QuestionDetail = () => {
   const cancel = () => {
     setEditingKey("");
   };
+  const getQuestionById = async (questionId) => {
+    setLoading(true);
+    let questionData = await handleGetQuestionByIdApi(questionId);
+    setQuestionDetailData(questionData?.question);
+    setLoading(false);
+  };
   const handleOnclickDone = () => {
     navigate("/question-management");
   };
   const save = async (key) => {
     try {
       const row = await form.validateFields();
-      const newData = [...data];
+      const newData = [...dataRow];
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const item = newData[index];
@@ -98,11 +90,11 @@ const QuestionDetail = () => {
           ...item,
           ...row,
         });
-        setData(newData);
+        dataRow = newData;
         setEditingKey("");
       } else {
         newData.push(row);
-        setData(newData);
+        dataRow = newData;
         setEditingKey("");
       }
     } catch (errInfo) {
@@ -162,6 +154,39 @@ const QuestionDetail = () => {
       }),
     };
   });
+
+  if (!loading) {
+    let questionContent = questionDetailData?.content?.replace(/<[^>]+>/g, "");
+
+    console.log(questionContent);
+    dataRow.push(
+      {
+        key: "question",
+        name: questionContent,
+      },
+      {
+        key: "answer1",
+        name: "A. 1",
+      },
+      {
+        key: "answer2",
+        name: "B. 1",
+      },
+      {
+        key: "answer3",
+        name: "C. 1",
+      },
+      {
+        key: "answer4",
+        name: "D. 1",
+      }
+    );
+  }
+
+  useEffect(() => {
+    getQuestionById(id);
+  }, []);
+
   return (
     <Form form={form} component={false}>
       <Table
@@ -171,11 +196,12 @@ const QuestionDetail = () => {
           },
         }}
         bordered
-        dataSource={data}
+        dataSource={dataRow}
         columns={mergedColumns}
         rowClassName="editable-row"
         pagination={false}
         showHeader={false}
+        loading={loading}
       />
       <Button
         type="primary"

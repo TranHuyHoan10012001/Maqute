@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable array-callback-return */
 import React, { useEffect, useState } from "react";
 import "../../../../css/question-management.css";
@@ -8,7 +9,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Popconfirm, Table } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   handleDeleteQuestionApi,
   handleQuestionListApi,
@@ -18,10 +19,12 @@ const { Search } = Input;
 const onSearch = (value) => console.log(value);
 
 const QuestionManagementComponent = () => {
+  const { id } = useParams();
+
   const [listQuestionsData, setListQuestionsData] = useState();
   const navigate = useNavigate();
-  const handleOnclickViewQuestion = () => {
-    navigate("/question-management/detail");
+  const handleOnclickViewQuestion = (questionId) => {
+    navigate(`/question-management/detail/${questionId}`);
   };
   const handleOnClickTypeQuestion = () => {
     navigate("/question-management/type-question");
@@ -132,7 +135,9 @@ const QuestionManagementComponent = () => {
       key: "action",
       render: (row) => (
         <div className="action">
-          <EyeOutlined onClick={handleOnclickViewQuestion} />
+          <EyeOutlined
+            onClick={(e) => handleOnclickViewQuestion(row.questionId)}
+          />
           <Popconfirm
             title="Bạn có muốn xóa câu hỏi này không?"
             onConfirm={(e) => handleDeleteQuestion(row.questionId)}

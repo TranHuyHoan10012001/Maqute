@@ -13,12 +13,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Context } from "../../../../context";
+import ExamUploadFile from "./exam-upload";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 const ExamManagementComponent = () => {
   const context = useContext(Context);
   console.log("context.questionsList: ", context.questionsList);
+  const [isOpen, toggleModal] = useState(false); //modal upload file exam
   const { id } = useParams();
   console.log("id: ", id);
   const [listExams, setListExams] = useState();
@@ -124,7 +126,12 @@ const ExamManagementComponent = () => {
       <div className="uploadAndSearch">
         <div className="leftPath">
           <div className="upload">
-            <Button icon={<CloudUploadOutlined />}>Tải file lên</Button>
+            <Button
+              onClick={() => toggleModal(true)}
+              icon={<CloudUploadOutlined />}
+            >
+              Tải file lên
+            </Button>
           </div>
           <div className="writeQuestion">
             <Button icon={<EditOutlined />}>Tạo đề thi</Button>
@@ -145,6 +152,24 @@ const ExamManagementComponent = () => {
       <div className="listQuestion">
         <Table columns={columns} dataSource={dataRow} onChange={onChange} />
       </div>
+      {isOpen && (
+        <ExamUploadFile
+          title={<h2 className="mb-[32px] underline">Tải lên đề thi</h2>}
+          open={isOpen}
+          rootClassName="modal-upload-file-exam"
+          onCancel={() => {
+            toggleModal(false);
+          }}
+          getContainer={false}
+          isEdit={false}
+          okText="Tạo đề thi"
+          cancelText="Hủy bỏ"
+          onRefreshList={async () => {
+            let allExamsData = await handleGetAllExamApi();
+            setListExams(allExamsData);
+          }}
+        />
+      )}
     </div>
   );
 };

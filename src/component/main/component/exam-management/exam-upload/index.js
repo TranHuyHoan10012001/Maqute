@@ -19,7 +19,6 @@ export default function ExamUploadFile(props) {
   const [form] = Form.useForm();
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-    console.log("newFileList", newFileList);
   };
 
   return (

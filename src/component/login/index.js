@@ -43,6 +43,7 @@ export const Login = () => {
       if (userData && userData.errorCode === 0) {
         navigate("/");
         openNotification();
+        localStorage.setItem("token", userData?.token);
       }
     } catch (error) {
       if (error.response) {

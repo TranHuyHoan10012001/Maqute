@@ -1,7 +1,7 @@
 import axios from "../axios";
 
-const handleAddKeyApi = (questionId, key) => {
-  return axios.post("/api/create-key", { questionId, key });
+const handleAddKeyApi = (questionId, keyAnswer) => {
+  return axios.post("/api/create-key", { questionId, keyAnswer });
 };
 
 const handleUpdateKeyApi = (questionId, key) => {

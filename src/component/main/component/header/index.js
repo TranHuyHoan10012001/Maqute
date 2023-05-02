@@ -26,7 +26,7 @@ const Header = () => {
         <div className="app-name">MAQUTE</div>
       </div>
       <div className="logout">
-        <div className="avatar">{context?.user?.userInfo?.firstName[0]}</div>
+        <div className="avatar">{context?.user?.firstName[0]}</div>
         <div className="setting" onClick={onClickSetting}>
           <SettingOutlined
             style={{ fontSize: 40, paddingLeft: 10, paddingRight: 10 }}

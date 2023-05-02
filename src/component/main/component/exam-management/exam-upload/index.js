@@ -1,18 +1,8 @@
 import React from "react";
 
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  message,
-  Modal,
-  Row,
-  Select,
-  Upload,
-} from "antd";
-import { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Modal, Row, Select, Upload } from "antd";
+import { useState } from "react";
 
 export default function ExamUploadFile(props) {
   const [fileList, setFileList] = useState([]);
@@ -23,25 +13,28 @@ export default function ExamUploadFile(props) {
   };
 
   return (
-    <Modal {...props} okButtonProps={{ htmlType: "submit", form: "form_upload_exam_file" }}>
+    <Modal
+      {...props}
+      okButtonProps={{ htmlType: "submit", form: "form_upload_exam_file" }}
+    >
       <Form
         name="form_upload_exam_file"
         form={form}
         layout="vertical"
         onFinish={(data) => {
-            console.log('data', data)
-            // ---
-            //create exam api
+          console.log("data", data);
+          // ---
+          //create exam api
 
-            //const formData = new FormData();
-            //formData.append("file", fileList[0]);
-            //formData.append("subject", data?.subject);
-            //formData.append("category", data?.category);
+          //const formData = new FormData();
+          //formData.append("file", fileList[0]);
+          //formData.append("subject", data?.subject);
+          //formData.append("category", data?.category);
 
-            // axios.post("/api/create-question", formData);
-            //----
+          // axios.post("/api/create-question", formData);
+          //----
 
-            // on finish: callback props.onRefreshList()
+          // on finish: callback props.onRefreshList()
         }}
       >
         <Row gutter={[24, 0]}>
@@ -96,9 +89,7 @@ export default function ExamUploadFile(props) {
                   <div className="flex justify-center items-center gap-[12px]">
                     <Button icon={<UploadOutlined />}>Click to upload</Button>{" "}
                   </div>
-                  {fileList && fileList[0] && (
-                    <div>{fileList[0]?.name}</div>
-                  )}
+                  {fileList && fileList[0] && <div>{fileList[0]?.name}</div>}
                 </>
               </Upload>
             </Form.Item>

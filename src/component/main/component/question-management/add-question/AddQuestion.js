@@ -25,7 +25,7 @@ export const AddQuestion = () => {
   const [keyAnswer, setKeyAnswer] = useState("");
   const [key, setKey] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const keyMultiChoice = JSON.stringify({ A: keyA, B: keyB, C: keyC, D: keyD });
+  const keyMultiChoice = keyA + "|" + keyB + "|" + keyC + "|" + keyD;
 
   const handleOnclickAddQuestion = async (e) => {
     e.preventDefault();

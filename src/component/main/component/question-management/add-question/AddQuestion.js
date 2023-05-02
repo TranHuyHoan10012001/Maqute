@@ -1,13 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "../../../../../css/add-question.css";
 import { Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { handleQuestionAddApi } from "../../../../../services/questionService";
+import { Context } from "../../../../../context";
+import { handleAddKeyApi } from "../../../../../services/keyService";
 
 export const AddQuestion = () => {
+  const context = useContext(Context);
+  const user = context?.user;
+  const author = user?.firstName + user?.lastName;
   const navigate = useNavigate();
   const [questionContent, setQuestionContent] = useState("");
   const [questionSubject, setQuestionSubject] = useState("");
@@ -18,7 +23,9 @@ export const AddQuestion = () => {
   const [keyC, setKeyC] = useState("");
   const [keyD, setKeyD] = useState("");
   const [keyAnswer, setKeyAnswer] = useState("");
+  const [key, setKey] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const keyMultiChoice = JSON.stringify({ A: keyA, B: keyB, C: keyC, D: keyD });
 
   const handleOnclickAddQuestion = async (e) => {
     e.preventDefault();
@@ -26,14 +33,27 @@ export const AddQuestion = () => {
     try {
       let newQuestionData = await handleQuestionAddApi(
         questionContent,
+        questionCategory === "Trắc nghiệm" ? key : keyAnswer,
         questionSubject,
         questionCategory,
-        questionLevel
+        questionLevel,
+        author
       );
-      if (newQuestionData && newQuestionData.errorCode !== 200) {
+      console.log("keyMultiChoice: ", keyMultiChoice);
+      let newKeyMultiChoice = await handleAddKeyApi(
+        newQuestionData?.question?.id,
+        keyMultiChoice
+      );
+      if (
+        (newQuestionData && newQuestionData.errorCode !== 200) ||
+        (newKeyMultiChoice && newKeyMultiChoice.errorCode !== 200)
+      ) {
         setErrorMessage(newQuestionData.message);
       }
-      if (newQuestionData && newQuestionData.errorCode === 200) {
+      if (
+        (newQuestionData && newQuestionData.errorCode === 200) ||
+        (newKeyMultiChoice && newKeyMultiChoice.errorCode === 200)
+      ) {
         navigate("/question-management");
       }
     } catch (error) {
@@ -90,6 +110,16 @@ export const AddQuestion = () => {
             }}
           />
         )}
+      </div>
+      <div className="key">
+        <h2>Đáp án</h2>
+        <Form>
+          <Input
+            data={key}
+            onChange={(e) => setKey(e.target.value)}
+            width={20}
+          />
+        </Form>
       </div>
       <div className="questionSubject">
         <h2>Môn học</h2>

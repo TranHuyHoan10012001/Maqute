@@ -7,8 +7,11 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { Context } from "../../../../context";
 
 const Header = () => {
+  const context = useContext(Context);
   const [showDetailSetting, setShowDetaiSetting] = useState(false);
   const onClickSetting = () => {
     setShowDetaiSetting(!showDetailSetting);
@@ -23,7 +26,7 @@ const Header = () => {
         <div className="app-name">MAQUTE</div>
       </div>
       <div className="logout">
-        <div className="avatar">H</div>
+        <div className="avatar">{context?.user?.userInfo?.firstName[0]}</div>
         <div className="setting" onClick={onClickSetting}>
           <SettingOutlined
             style={{ fontSize: 40, paddingLeft: 10, paddingRight: 10 }}

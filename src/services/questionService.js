@@ -1,11 +1,20 @@
 import axios from "../axios";
 
-const handleQuestionAddApi = (content, subject, category, level) => {
+const handleQuestionAddApi = (
+  content,
+  key,
+  subject,
+  category,
+  level,
+  author
+) => {
   return axios.post("/api/create-question", {
     content,
+    key,
     subject,
     category,
     level,
+    author,
   });
 };
 

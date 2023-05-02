@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable array-callback-return */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../../../../css/question-management.css";
 import {
   CloudUploadOutlined,
@@ -14,11 +14,13 @@ import {
   handleDeleteQuestionApi,
   handleQuestionListApi,
 } from "../../../../services/questionService";
+import { Context } from "../../../../context";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 
 const QuestionManagementComponent = () => {
+  const context = useContext(Context);
   const { id } = useParams();
 
   const [listQuestionsData, setListQuestionsData] = useState();
@@ -34,6 +36,8 @@ const QuestionManagementComponent = () => {
   const getAllQuestion = async () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     let allQuestionsData = await handleQuestionListApi();
+    context.setQuestionsList(allQuestionsData);
+
     setListQuestionsData(allQuestionsData);
   };
   const handleDeleteQuestion = async (questionId) => {
@@ -50,6 +54,7 @@ const QuestionManagementComponent = () => {
 
   useEffect(() => {
     getAllQuestion();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   listQuestionsData?.questions.forEach((question) => {
     let questionContent = question.content.replace(/<[^>]+>/g, "");

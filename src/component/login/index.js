@@ -1,22 +1,22 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
-import { Button, Input, Space, notification } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
-  MailOutlined,
   LockOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
-import React, { useEffect, useMemo, useState } from "react";
+import { Button, Input, Space, notification } from "antd";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import loginImage from "../../image/loginImageLeft.jpg";
 import "../../css/login.css";
+import loginImage from "../../image/loginImageLeft.jpg";
 import { handleUserLoginApi } from "../../services/userServices";
-const Context = React.createContext({
-  name: "Default",
-});
+import { useContext } from "react";
+import { Context } from "../../context";
 
 export const Login = () => {
+  const context = useContext(Context);
   const openNotification = () => {
     const args = {
       message: "Thông báo",
@@ -42,6 +42,8 @@ export const Login = () => {
 
       if (userData && userData.errorCode === 0) {
         navigate("/");
+        console.log("userData: ", userData);
+        context.setUser(userData.user);
         openNotification();
       }
     } catch (error) {

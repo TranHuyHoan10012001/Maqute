@@ -11,10 +11,14 @@ import { Button, Input, Popconfirm, Table } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useContext } from "react";
+import { Context } from "../../../../context";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 const ExamManagementComponent = () => {
+  const context = useContext(Context);
+  console.log("context.questionsList: ", context.questionsList);
   const { id } = useParams();
   console.log("id: ", id);
   const [listExams, setListExams] = useState();

@@ -58,7 +58,10 @@ const Header = () => {
                   borderBottomStyle: "groove",
                   cursor: "pointer",
                 }}
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  navigate("/login")
+                }}
               >
                 <LogoutOutlined />
                 Đăng xuất

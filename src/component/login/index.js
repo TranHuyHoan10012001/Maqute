@@ -45,6 +45,7 @@ export const Login = () => {
         console.log("userData: ", userData);
         context.setUser(userData.user);
         openNotification();
+        localStorage.setItem("token", userData?.token);
       }
     } catch (error) {
       if (error.response) {

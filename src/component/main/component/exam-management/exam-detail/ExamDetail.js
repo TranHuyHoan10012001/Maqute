@@ -34,10 +34,12 @@ export const ExamDetail = () => {
   const createPDF = async () => {
     const pdf = new jsPDF("portrait", "px");
     const data = await document.querySelector("#pdf-container");
+    const cloneData = data.cloneNode(true);
+    cloneData.style.width = "600px";
     pdf.addFileToVFS("times-normal.ttf", font);
     pdf.addFont("times-normal.ttf", "times", "normal");
     pdf.setFont("times");
-    pdf.html(data).then(() => {
+    pdf.html(cloneData).then(() => {
       pdf.save(`De_thi_so_${id}.pdf`);
     });
   };
@@ -78,9 +80,7 @@ export const ExamDetail = () => {
       <div
         className="exam-detail"
         id="pdf-container"
-        style={{
-          fontFamily: `"Times New Roman", Times, serif`,
-        }}
+        style={{ fontFamily: '"Times New Roman", Times, serif' }}
       >
         <header className="headerContainer">
           <h2>

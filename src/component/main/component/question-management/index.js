@@ -15,6 +15,7 @@ import {
   handleQuestionListApi,
 } from "../../../../services/questionService";
 import { Context } from "../../../../context";
+import { handleKeyListApi } from "../../../../services/keyService";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
@@ -40,6 +41,10 @@ const QuestionManagementComponent = () => {
 
     setListQuestionsData(allQuestionsData);
   };
+  const getAllKey = async () => {
+    let allKeyData = await handleKeyListApi();
+    context.setKey(allKeyData);
+  };
   const handleDeleteQuestion = async (questionId) => {
     try {
       let res = await handleDeleteQuestionApi(questionId);
@@ -54,6 +59,7 @@ const QuestionManagementComponent = () => {
 
   useEffect(() => {
     getAllQuestion();
+    getAllKey();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   listQuestionsData?.questions.forEach((question) => {

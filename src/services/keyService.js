@@ -7,4 +7,7 @@ const handleAddKeyApi = (questionId, keyAnswer) => {
 const handleUpdateKeyApi = (questionId, key) => {
   return axios.patch("/api/update-question-key", { questionId, key });
 };
-export { handleAddKeyApi, handleUpdateKeyApi };
+const handleKeyListApi = () => {
+  return axios.get("/api/list-keys");
+};
+export { handleAddKeyApi, handleUpdateKeyApi, handleKeyListApi };

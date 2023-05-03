@@ -23,8 +23,6 @@ const ExamManagementComponent = () => {
   console.log("context.questionsList: ", context.questionsList);
   const [isOpen, toggleModal] = useState(false); //modal upload file exam
   const [isOpenCreateExamModal, setIsOpenCreateExamModal] = useState(false);
-  const { id } = useParams();
-  console.log("id: ", id);
   const [listExams, setListExams] = useState();
   const navigate = useNavigate();
 

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   CloudDownloadOutlined,
   EditOutlined,
@@ -11,10 +10,7 @@ import "../../../../../css/exam-detail.css";
 import { handleGetExamByIdApi } from "../../../../../services/examService";
 import { jsPDF } from "jspdf";
 import { Context } from "../../../../../context";
-import { font } from "./common";
-import WebViewer from "@pdftron/webviewer";
-
-export const ExamDetail = () => {
+export const Test = () => {
   const context = useContext(Context);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -32,25 +28,14 @@ export const ExamDetail = () => {
 
   const getExam = async (examId) => {
     let examData = await handleGetExamByIdApi(examId);
-    console.log("exam by id: ", examData);
     setExamByIdData(examData);
-    // const element = document.getElementById("viewer");
-    // WebViewer(
-    //   {
-    //     path: "/test", // point to where the files you copied are served from
-    //     initialDoc: "/test", // path to your document
-    //   },
-    //   element
-    // ).then((instance) => {
-    //   console.log("hello: ", instance);
-    // });
   };
   const createPDF = async () => {
     const pdf = new jsPDF("portrait", "pt", "a4");
     const data = await document.querySelector("#pdf-container");
     const cloneData = data.cloneNode(true);
     cloneData.style.width = "600px";
-    pdf.addFileToVFS("times-normal.ttf", font);
+    // pdf.addFileToVFS("times-normal.ttf", font);
     pdf.addFont("times-normal.ttf", "times", "normal");
     pdf.setFont("times");
     pdf.html(cloneData).then(() => {
@@ -65,7 +50,7 @@ export const ExamDetail = () => {
   useEffect(() => {
     let questionAllContext = context?.questionsList?.questions;
     let keyAllContext = context?.key.keys;
-    if (examByIdData && examByIdData.questions && questionAllContext) {
+    if (examByIdData && questionAllContext) {
       const listQuestions = examByIdData?.exam;
 
       let questionIdList = listQuestions?.questions.split(",");
@@ -148,7 +133,7 @@ export const ExamDetail = () => {
           <h2>Môn học: {examByIdData?.exam.subject}</h2>
           <h3>Thời gian: {examByIdData?.exam.timeLimit} phút</h3>
         </header>
-        <main className="mainExamContainer" id="viewer">
+        <main className="mainExamContainer">
           {questionsToRender.map((question, index) => (
             <QuestionDetail question={question} index={index} />
           ))}

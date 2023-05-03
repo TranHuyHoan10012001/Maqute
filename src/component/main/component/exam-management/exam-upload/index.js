@@ -86,7 +86,7 @@ export default function ExamUploadFile(props) {
               name={"file"}
             >
               <Upload
-              customRequest={()=>{}}
+                customRequest={()=>{}}
                 fileList={fileList}
                 onChange={onChange}
                 maxCount={1}

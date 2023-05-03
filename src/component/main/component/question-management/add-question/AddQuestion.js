@@ -87,16 +87,26 @@ export const AddQuestion = () => {
         {questionCategory === "Trắc nghiệm" && (
           <form style={{ display: "flex", flexDirection: "column" }}>
             <div className="key">
-              A. <input onChange={(e) => setKeyA(e.target.value)} />
+              A. <Input onChange={(e) => setKeyA(e.target.value)} />
             </div>
             <div className="key">
-              B. <input onChange={(e) => setKeyB(e.target.value)} />
+              B. <Input onChange={(e) => setKeyB(e.target.value)} />
             </div>
             <div className="key">
-              C. <input onChange={(e) => setKeyC(e.target.value)} />
+              C. <Input onChange={(e) => setKeyC(e.target.value)} />
             </div>
             <div className="key">
-              D. <input onChange={(e) => setKeyD(e.target.value)} />
+              D. <Input onChange={(e) => setKeyD(e.target.value)} />
+            </div>
+            <div className="key-answer">
+              <h2>Đáp án</h2>
+              <Form>
+                <Input
+                  data={key}
+                  onChange={(e) => setKey(e.target.value)}
+                  width={20}
+                />
+              </Form>
             </div>
           </form>
         )}
@@ -111,16 +121,7 @@ export const AddQuestion = () => {
           />
         )}
       </div>
-      <div className="key">
-        <h2>Đáp án</h2>
-        <Form>
-          <Input
-            data={key}
-            onChange={(e) => setKey(e.target.value)}
-            width={20}
-          />
-        </Form>
-      </div>
+
       <div className="questionSubject">
         <h2>Môn học</h2>
         <Form>

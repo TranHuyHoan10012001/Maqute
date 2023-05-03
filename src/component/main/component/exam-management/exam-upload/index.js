@@ -3,12 +3,14 @@ import React from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Modal, Row, Select, Upload } from "antd";
 import { useState } from "react";
+import axios from "axios";
 
 export default function ExamUploadFile(props) {
   const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+    console.log("fileList: ", newFileList);
   };
 
   return (
@@ -20,17 +22,29 @@ export default function ExamUploadFile(props) {
         name="form_upload_exam_file"
         form={form}
         layout="vertical"
-        onFinish={(data) => {
+        onFinish={async (data) => {
           console.log("data", data);
           // ---
           //create exam api
+          if (fileList && fileList[0]) {
+            const formData = new FormData();
+            formData.append("file", fileList[0]);
+            formData.append("subject", data?.subject);
+            formData.append("category", data?.category);
+            formData.append("question", "");
+            formData.append("timeLimit", 90);
+            formData.append("maxScore", 10);
 
-          //const formData = new FormData();
-          //formData.append("file", fileList[0]);
-          //formData.append("subject", data?.subject);
-          //formData.append("category", data?.category);
-
-          // axios.post("/api/create-question", formData);
+            await axios
+              .post("http://localhost:8080/api/create-exam", formData)
+              .then((response) => {
+                props.onCancel();
+                props.onRefreshList();
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
           //----
 
           // on finish: callback props.onRefreshList()
@@ -53,8 +67,12 @@ export default function ExamUploadFile(props) {
               rules={[{ required: true, message: "Vui lòng chọn chủ đề!" }]}
             >
               <Select>
-                <Select.Option value="mon_hoc_1">Môn học 1</Select.Option>
-                <Select.Option value="mon_hoc_2">Môn học 2</Select.Option>
+                <Select.Option value="Tư tưởng Hồ Chí Minh">
+                  Tư tưởng Hồ Chí Minh
+                </Select.Option>
+                <Select.Option value="Nguyên lý Hệ điều hành">
+                  Nguyên lý Hệ điều hành
+                </Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -79,7 +97,7 @@ export default function ExamUploadFile(props) {
               name={"file"}
             >
               <Upload
-                customRequest={()=>{}}
+                customRequest={() => {}}
                 fileList={fileList}
                 onChange={onChange}
                 maxCount={1}

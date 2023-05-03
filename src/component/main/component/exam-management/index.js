@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import { Context } from "../../../../context";
 import ExamUploadFile from "./exam-upload";
+import ExamCreate from "./exam-add";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
@@ -21,6 +22,7 @@ const ExamManagementComponent = () => {
   const context = useContext(Context);
   console.log("context.questionsList: ", context.questionsList);
   const [isOpen, toggleModal] = useState(false); //modal upload file exam
+  const [isOpenCreateExamModal, setIsOpenCreateExamModal] = useState(false);
   const { id } = useParams();
   console.log("id: ", id);
   const [listExams, setListExams] = useState();
@@ -134,7 +136,12 @@ const ExamManagementComponent = () => {
             </Button>
           </div>
           <div className="writeQuestion">
-            <Button icon={<EditOutlined />}>Tạo đề thi</Button>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => setIsOpenCreateExamModal(true)}
+            >
+              Tạo đề thi
+            </Button>
           </div>
         </div>
         <div className="rightPath">
@@ -159,6 +166,24 @@ const ExamManagementComponent = () => {
           rootClassName="modal-upload-file-exam"
           onCancel={() => {
             toggleModal(false);
+          }}
+          getContainer={false}
+          isEdit={false}
+          okText="Tạo đề thi"
+          cancelText="Hủy bỏ"
+          onRefreshList={async () => {
+            let allExamsData = await handleGetAllExamApi();
+            setListExams(allExamsData);
+          }}
+        />
+      )}
+      {isOpenCreateExamModal && (
+        <ExamCreate
+          title={<h2 className="mb-[32px] underline">Tạo đề thi</h2>}
+          open={isOpenCreateExamModal}
+          rootClassName="modal-create-exam"
+          onCancel={() => {
+            setIsOpenCreateExamModal(false);
           }}
           getContainer={false}
           isEdit={false}

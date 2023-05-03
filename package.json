@@ -22,9 +22,11 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",
+    "react-pdf": "^6.2.2",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
-    "yup": "^1.0.2"
+    "yup": "^1.0.2",
+    "uploads": "file:../MaquteServer/uploads"
   },
   "scripts": {
     "start": "react-scripts start",

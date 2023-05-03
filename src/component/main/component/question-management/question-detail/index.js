@@ -9,10 +9,11 @@ import {
   Button,
 } from "antd";
 import "../../../../../css/question-detail.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleGetQuestionByIdApi } from "../../../../../services/questionService";
 import { useEffect } from "react";
+import { Context } from "../../../../../context";
 
 const EditableCell = ({
   editing,
@@ -58,6 +59,9 @@ const QuestionDetail = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState();
   let dataRow = [];
+  const context = useContext(Context);
+  const keyAnswer = context.key;
+  console.log("keyAnswer: ", keyAnswer);
 
   const edit = (record) => {
     form.setFieldsValue({

@@ -1,9 +1,8 @@
 import React from "react";
 
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Modal, Row, Select, Upload } from "antd";
-import { useState } from "react";
+import { Col, Form, Input, Modal, Row, Select } from "antd";
 import axios from "axios";
+import { useState } from "react";
 
 export default function ExamUploadFile(props) {
   const [fileList, setFileList] = useState([]);
@@ -26,25 +25,32 @@ export default function ExamUploadFile(props) {
           console.log("data", data);
           // ---
           //create exam api
-          if (fileList && fileList[0]) {
-            const formData = new FormData();
-            formData.append("file", fileList[0]);
-            formData.append("subject", data?.subject);
-            formData.append("category", data?.category);
-            formData.append("question", "");
-            formData.append("timeLimit", 90);
-            formData.append("maxScore", 10);
+          //   if (fileList && fileList[0]) {
+          const files = document.querySelector("#file-upload");
+          console.log("files: ", files);
+          const formData = new FormData();
+          formData.append("file", files.files[0]);
+          formData.append("subject", data?.subject);
+          formData.append("category", data?.category);
+          formData.append("question", "");
+          formData.append("timeLimit", 90);
+          formData.append("maxScore", 10);
+          console.log("form data: ", formData);
 
-            await axios
-              .post("http://localhost:8080/api/upload-exam", formData)
-              .then((response) => {
-                props.onCancel();
-                props.onRefreshList();
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          }
+          await axios
+            .post("http://localhost:8080/api/upload-exam", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((response) => {
+              props.onCancel();
+              props.onRefreshList();
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+          //   }
           //----
 
           // on finish: callback props.onRefreshList()
@@ -96,20 +102,11 @@ export default function ExamUploadFile(props) {
               label={<div className="capitalize">File đề thi</div>}
               name={"file"}
             >
-              <Upload
-                customRequest={() => {}}
-                fileList={fileList}
-                onChange={onChange}
-                maxCount={1}
-                showUploadList={false}
-              >
-                <>
-                  <div className="flex justify-center items-center gap-[12px]">
-                    <Button icon={<UploadOutlined />}>Click to upload</Button>{" "}
-                  </div>
-                  {fileList && fileList[0] && <div>{fileList[0]?.name}</div>}
-                </>
-              </Upload>
+              <input
+                type="file"
+                id="file-upload"
+                accept="application/pdf"
+              ></input>
             </Form.Item>
           </Col>
         </Row>

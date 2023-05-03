@@ -26,6 +26,7 @@ const ExamManagementComponent = () => {
     navigate(`/exam-detail/${examId}`);
   };
   const handleGetAllExam = async () => {
+    console.log('hello');
     let allExamsData = await handleGetAllExamApi();
     setListExams(allExamsData);
   };

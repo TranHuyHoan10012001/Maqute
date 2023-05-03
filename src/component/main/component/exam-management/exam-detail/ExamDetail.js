@@ -45,10 +45,7 @@ export const ExamDetail = () => {
     <div>
       <div className="action-exam">
         <div className="upload">
-          <Button
-            icon={<CloudDownloadOutlined />}
-            onClick={()=> createPDF()}
-          >
+          <Button icon={<CloudDownloadOutlined />} onClick={() => createPDF()}>
             Xuất file
           </Button>
         </div>
@@ -72,7 +69,14 @@ export const ExamDetail = () => {
           <Button icon={<CommentOutlined />}>Đánh giá đề thi</Button>
         </div>
       </div>
-      <div className="exam-detail" id="pdf-container">
+      <div
+        className="exam-detail"
+        id="pdf-container"
+        style={{
+          fontFamily:
+            "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji",
+        }}
+      >
         <header className="headerContainer">
           <h2>
             .....................................................................

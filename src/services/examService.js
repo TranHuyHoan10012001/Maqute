@@ -8,4 +8,22 @@ const handleGetAllExamApi = () => {
   return axios.get("/api/list-exams");
 };
 
-export { handleGetExamByIdApi, handleGetAllExamApi };
+const handleCreateExamApi = (
+  subject,
+  category,
+  questions,
+  timeLimit,
+  maxScore,
+  file
+) => {
+  return axios.post("/api/create-exam", {
+    subject,
+    category,
+    questions,
+    timeLimit,
+    maxScore,
+    file,
+  });
+};
+
+export { handleGetExamByIdApi, handleGetAllExamApi, handleCreateExamApi };

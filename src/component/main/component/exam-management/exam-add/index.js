@@ -2,6 +2,7 @@ import { Alert, Col, Form, Input, Modal, Row } from "antd";
 import { useContext } from "react";
 import { Context } from "../../../../../context";
 import { useState } from "react";
+import { handleCreateExamApi } from "../../../../../services/examService";
 
 export default function ExamCreate(props) {
   const context = useContext(Context);
@@ -59,7 +60,7 @@ export default function ExamCreate(props) {
         hardQuestionTarget?.forEach((question) =>
           questionIdList.push(question.id)
         );
-    console.log("questionIdList: ", questionIdList);
+    return questionIdList;
   };
   const [form] = Form.useForm();
   return (
@@ -71,15 +72,30 @@ export default function ExamCreate(props) {
         name="form_create_exam"
         form={form}
         layout="vertical"
-        onFinish={(data) =>
-          handleCreateExam(
+        onFinish={async (data) => {
+          const subject = data?.subject;
+          const category = data?.category;
+          const timeLimit = 90;
+          const maxScore = 10;
+          const file = undefined;
+          const listQuestionIds = handleCreateExam(
             listQuestions,
-            data?.subject,
+            subject,
             data?.easyQuestion,
             data?.normalQuestion,
             data?.hardQuestion
-          )
-        }
+          );
+          await handleCreateExamApi(
+            subject,
+            category,
+            listQuestionIds.toString(),
+            timeLimit,
+            maxScore,
+            file
+          );
+          props.onCancel();
+          props.onRefreshList();
+        }}
       >
         <Row gutter={[24, 0]}>
           <Col span={24}>
@@ -87,6 +103,15 @@ export default function ExamCreate(props) {
               label={<div>Môn học</div>}
               name={"subject"}
               rules={[{ required: true, message: "Vui lòng điền môn học" }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              label={<div>Thể loại</div>}
+              name={"category"}
+              rules={[{ required: true, message: "Vui lòng điền thể loại" }]}
             >
               <Input />
             </Form.Item>

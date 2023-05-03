@@ -36,7 +36,7 @@ export default function ExamUploadFile(props) {
             formData.append("maxScore", 10);
 
             await axios
-              .post("http://localhost:8080/api/create-exam", formData)
+              .post("http://localhost:8080/api/upload-exam", formData)
               .then((response) => {
                 props.onCancel();
                 props.onRefreshList();

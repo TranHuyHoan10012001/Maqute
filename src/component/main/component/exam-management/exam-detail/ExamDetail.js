@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../../../../css/exam-detail.css";
 import { handleGetExamByIdApi } from "../../../../../services/examService";
+import { jsPDF } from "jspdf";
 export const ExamDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -27,8 +28,12 @@ export const ExamDetail = () => {
     let examData = await handleGetExamByIdApi(examId);
     setExamByIdData(examData);
   };
-  const handleClickDownloadFile = () => {
-    alert("Tải file thành công");
+  const createPDF = async () => {
+    const pdf = new jsPDF("portrait", "pt", "a4");
+    const data = await document.querySelector("#pdf-container");
+    pdf.html(data).then(() => {
+      pdf.save(`De_thi_so_${id}.pdf`);
+    });
   };
   useEffect(() => {
     getExam(id);
@@ -42,7 +47,7 @@ export const ExamDetail = () => {
         <div className="upload">
           <Button
             icon={<CloudDownloadOutlined />}
-            onClick={handleClickDownloadFile}
+            onClick={()=> createPDF()}
           >
             Xuất file
           </Button>
@@ -67,7 +72,7 @@ export const ExamDetail = () => {
           <Button icon={<CommentOutlined />}>Đánh giá đề thi</Button>
         </div>
       </div>
-      <div className="exam-detail">
+      <div className="exam-detail" id="pdf-container">
         <header className="headerContainer">
           <h2>
             .....................................................................

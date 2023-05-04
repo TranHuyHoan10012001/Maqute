@@ -6,30 +6,37 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Modal } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../../../../css/exam-detail.css";
 import { handleGetExamByIdApi } from "../../../../../services/examService";
 import { jsPDF } from "jspdf";
 import { Context } from "../../../../../context";
 import { font } from "./common";
 import { Document, Page, pdfjs } from "react-pdf";
+import { ExamAnalyst } from "../exam-analyst";
+import { hanldeGetAnalystByIdApi } from "../../../../../services/examAnalyst";
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export const ExamDetail = () => {
   const context = useContext(Context);
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pdfFile, setPdfFile] = useState();
+  const [isOpenModalCreateAnalyst, setIsOpenModalCreateAnalyst] =
+    useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const handleOk = () => {
+  const handleOk = (id) => {
     setIsModalOpen(false);
+    navigate(`question-management/detail/${id}`);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
   const { id } = useParams();
   const [examByIdData, setExamByIdData] = useState();
+  const [analystByIdData, setAnalystByIdData] = useState();
   const [questionsToRender, setQuestionsToRender] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [numPages, setNumPages] = useState(null);
@@ -42,9 +49,15 @@ export const ExamDetail = () => {
       setPdfFile(file);
     }
   };
-  const createPDF = async () => {
+
+  const getAnalyst = async (examId) => {
+    let analyst = await hanldeGetAnalystByIdApi(examId);
+    setAnalystByIdData(analyst);
+    console.log("analyst: ", analyst);
+  };
+  const createPDF = async (examId) => {
     const pdf = new jsPDF("portrait", "pt", "a4");
-    const data = await document.querySelector("#pdf-container");
+    const data = await document.querySelector(examId);
     const cloneData = data.cloneNode(true);
     cloneData.style.width = "600px";
     pdf.addFileToVFS("times-normal.ttf", font);
@@ -54,8 +67,10 @@ export const ExamDetail = () => {
       pdf.save(`De_thi_so_${id}.pdf`);
     });
   };
+
   useEffect(() => {
     getExam(id);
+    getAnalyst(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -105,6 +120,33 @@ export const ExamDetail = () => {
     );
   };
 
+  const KeyDetail = ({ question, index }) => {
+    return (
+      <div>
+        <h4>{`Câu ${index + 1}: ${question.key.replace(/<[^>]+>/g, "")}`}</h4>
+      </div>
+    );
+  };
+
+  const AnalystDetail = ({ analyst, index }) => {
+    return (
+      <div>
+        <h4 style={{ margin: 20 }}>{`Đánh giá thứ ${index}`}</h4>
+        <span
+          style={{ margin: 20 }}
+        >{`Số điểm cao: ${analyst?.highGrade}`}</span>
+        <span
+          style={{ margin: 20 }}
+        >{`Số điểm trung bình: ${analyst?.commonGrade}`}</span>
+        <span
+          style={{ margin: 20 }}
+        >{`Số điểm thấp: ${analyst?.lowGrade}`}</span>{" "}
+        <br />
+        <span style={{ margin: 20 }}>{`Nhận xét: ${analyst?.comments}`}</span>
+      </div>
+    );
+  };
+
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
@@ -113,8 +155,17 @@ export const ExamDetail = () => {
     <div>
       <div className="action-exam">
         <div className="upload">
-          <Button icon={<CloudDownloadOutlined />} onClick={() => createPDF()}>
-            Xuất file
+          <Button
+            icon={<CloudDownloadOutlined />}
+            onClick={() => createPDF("#pdf-container")}
+          >
+            Xuất file đề thi
+          </Button>
+          <Button
+            icon={<CloudDownloadOutlined />}
+            onClick={() => createPDF("#pdf-key")}
+          >
+            Xuất file đáp án
           </Button>
         </div>
         <div className="edit-exam">
@@ -124,7 +175,7 @@ export const ExamDetail = () => {
           <Modal
             title="Chỉnh sửa đề thi"
             open={isModalOpen}
-            onOk={handleOk}
+            onOk={() => handleOk(1)}
             onCancel={handleCancel}
           >
             <div>
@@ -134,7 +185,12 @@ export const ExamDetail = () => {
           </Modal>
         </div>
         <div className="analyst-exam">
-          <Button icon={<CommentOutlined />}>Đánh giá đề thi</Button>
+          <Button
+            icon={<CommentOutlined />}
+            onClick={() => setIsOpenModalCreateAnalyst(true)}
+          >
+            Đánh giá đề thi
+          </Button>
         </div>
       </div>
       {examByIdData?.exam.file ? (
@@ -142,25 +198,62 @@ export const ExamDetail = () => {
           <Page pageNumber={1} renderTextLayer={false} />
         </Document>
       ) : (
-        <div
-          className="exam-detail"
-          id="pdf-container"
-          style={{ fontFamily: '"Times New Roman", Times, serif' }}
-        >
-          <header className="headerContainer">
-            <h2>
-              .....................................................................
-            </h2>
-            <h2>Đề thi số {id}</h2>
-            <h2>Môn học: {examByIdData?.exam.subject}</h2>
-            <h3>Thời gian: {examByIdData?.exam.timeLimit} phút</h3>
-          </header>
-          <main className="mainExamContainer">
+        <div>
+          <div
+            className="exam-detail"
+            id="pdf-container"
+            style={{ fontFamily: '"Times New Roman", Times, serif' }}
+          >
+            <header className="headerContainer">
+              <h2>
+                .....................................................................
+              </h2>
+              <h2>Đề thi số {id}</h2>
+              <h2>Môn học: {examByIdData?.exam.subject}</h2>
+              <h3>Thời gian: {examByIdData?.exam.timeLimit} phút</h3>
+            </header>
+            <main className="mainExamContainer">
+              {questionsToRender.map((question, index) => (
+                <QuestionDetail question={question} index={index} />
+              ))}
+            </main>
+          </div>
+          <h2 style={{ margin: 20 }}>Đáp án</h2>
+          <div
+            className="key-answer"
+            id="pdf-key"
+            style={{ fontFamily: '"Times New Roman", Times, serif' }}
+          >
             {questionsToRender.map((question, index) => (
-              <QuestionDetail question={question} index={index} />
+              <KeyDetail question={question} index={index} />
             ))}
-          </main>
+          </div>
+          <h2 style={{ margin: 20 }}>Đánh giá</h2>
+          {analystByIdData?.keyAnswer.map((analyst, index) => (
+            <AnalystDetail analyst={analyst} index={index + 1} />
+          ))}
         </div>
+      )}
+      {isOpenModalCreateAnalyst && (
+        <ExamAnalyst
+          examId={id}
+          title={<h2 className="mb-[32px] underline">Tạo đánh giá đề thi</h2>}
+          open={isOpenModalCreateAnalyst}
+          rootClassName="modal-upload-file-exam"
+          onCancel={() => {
+            setIsOpenModalCreateAnalyst(false);
+          }}
+          getContainer={false}
+          isEdit={false}
+          okText="Tạo đánh giá"
+          cancelText="Hủy bỏ"
+          onRefreshList={async () => {
+            let examData = await handleGetExamByIdApi(id);
+            setExamByIdData(examData);
+            let analyst = await hanldeGetAnalystByIdApi(id);
+            setAnalystByIdData(analyst);
+          }}
+        />
       )}
     </div>
   );

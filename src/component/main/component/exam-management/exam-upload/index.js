@@ -22,12 +22,10 @@ export default function ExamUploadFile(props) {
         form={form}
         layout="vertical"
         onFinish={async (data) => {
-          console.log("data", data);
           // ---
           //create exam api
           //   if (fileList && fileList[0]) {
           const files = document.querySelector("#file-upload");
-          console.log("files: ", files);
           const formData = new FormData();
           formData.append("file", files.files[0]);
           formData.append("subject", data?.subject);

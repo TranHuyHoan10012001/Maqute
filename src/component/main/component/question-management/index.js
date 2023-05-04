@@ -18,11 +18,12 @@ import { Context } from "../../../../context";
 import { handleKeyListApi } from "../../../../services/keyService";
 
 const { Search } = Input;
-const onSearch = (value) => console.log(value);
 
 const QuestionManagementComponent = () => {
+  const [inputSearch, setInputSearch] = useState("");
   const context = useContext(Context);
   const { id } = useParams();
+  const onSearch = (value) => setInputSearch(value);
 
   const [listQuestionsData, setListQuestionsData] = useState();
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const QuestionManagementComponent = () => {
   const handleOnClickTypeQuestion = () => {
     navigate("/question-management/type-question");
   };
-  const dataRow = [];
+  const [dataRow, setDataRow] = useState([]);
 
   const getAllQuestion = async () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,16 +63,24 @@ const QuestionManagementComponent = () => {
     getAllKey();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  listQuestionsData?.questions.forEach((question) => {
-    let questionContent = question.content.replace(/<[^>]+>/g, "");
-    dataRow.push({
-      questionId: question.id,
-      question: questionContent,
-      subject: question.subject,
-      category: question.category,
-      level: question.level,
+
+  useEffect(() => {
+    let newDataRow = [];
+    listQuestionsData?.questions.forEach((question) => {
+      let questionContent = question.content.replace(/<[^>]+>/g, "");
+      newDataRow.push({
+        questionId: question.id,
+        question: questionContent,
+        subject: question.subject,
+        category: question.category,
+        level: question.level,
+      });
     });
-  });
+    newDataRow = newDataRow.filter((data) =>
+      data.question.toLowerCase().includes(inputSearch.toLowerCase())
+    );
+    setDataRow(newDataRow);
+  }, [listQuestionsData, inputSearch]);
 
   console.log("dataRow: ", dataRow);
   const columns = [
@@ -89,16 +98,12 @@ const QuestionManagementComponent = () => {
       dataIndex: "subject",
       filters: [
         {
-          text: "Thể chất",
-          value: "Thể chất",
+          text: "Tư tưởng Hồ Chí Minh",
+          value: "Tư tưởng Hồ Chí Minh",
         },
         {
-          text: "Tiếng Anh",
-          value: "Tiếng Anh",
-        },
-        {
-          text: "Toán học",
-          value: "Toán học",
+          text: "Nguyên lý hệ điều hành",
+          value: "Nguyên lý hệ điều hành",
         },
       ],
       filterSearch: true,
@@ -188,6 +193,7 @@ const QuestionManagementComponent = () => {
               style={{
                 width: 200,
               }}
+              onChange={(e) => console.log("value: ", e.target.value)}
             />
           </div>
         </div>

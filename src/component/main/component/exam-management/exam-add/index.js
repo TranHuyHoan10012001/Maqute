@@ -25,6 +25,7 @@ export default function ExamCreate(props) {
   }
   const handleCreateExam = (
     listQuestions,
+    category,
     subject,
     easyQuestion,
     normalQuestion,
@@ -32,7 +33,8 @@ export default function ExamCreate(props) {
   ) => {
     const questionIdList = [];
     const filterSubject = listQuestions.filter(
-      (question) => question.subject === subject
+      (question) =>
+        question.subject === subject && question.category === category
     );
     const allEasyQuestion = filterSubject.filter(
       (question) => question.level === "Thông hiểu"
@@ -80,6 +82,7 @@ export default function ExamCreate(props) {
           const file = undefined;
           const listQuestionIds = handleCreateExam(
             listQuestions,
+            category,
             subject,
             data?.easyQuestion,
             data?.normalQuestion,

@@ -43,7 +43,14 @@ function App() {
             path="/exam-management"
             element={<ExamManagementComponent />}
           />
-          <Route path="/exam-detail/:id" element={<ExamDetailWrapper />} />
+          <Route
+            path="/exam-management/exam-detail/:id"
+            element={<ExamDetailWrapper />}
+          />
+          <Route
+            path="/exam-management/exam-detail/:id/question-management/detail/:id"
+            element={<QuestionDetail />}
+          />
           <Route path="/exam-analyst/:id" element={<ExamAnalyst />} />
         </Route>
       </Routes>

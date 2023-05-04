@@ -23,11 +23,12 @@ const ExamManagementComponent = () => {
   console.log("context.questionsList: ", context.questionsList);
   const [isOpen, toggleModal] = useState(false); //modal upload file exam
   const [isOpenCreateExamModal, setIsOpenCreateExamModal] = useState(false);
+
   const [listExams, setListExams] = useState();
   const navigate = useNavigate();
 
   const handleOnClickExamDetail = (examId) => {
-    navigate(`/exam-detail/${examId}`);
+    navigate(`/exam-management/exam-detail/${examId}`);
   };
   const handleGetAllExam = async () => {
     let allExamsData = await handleGetAllExamApi();
@@ -47,8 +48,6 @@ const ExamManagementComponent = () => {
     });
   });
 
-  console.log("listExams: ", dataRow);
-
   const columns = [
     {
       title: "STT",
@@ -64,16 +63,12 @@ const ExamManagementComponent = () => {
       dataIndex: "subject",
       filters: [
         {
-          text: "Thể chất",
-          value: "Thể chất",
+          text: "Tư tưởng Hồ Chí Minh",
+          value: "Tư tưởng Hồ Chí Minh",
         },
         {
-          text: "Tiếng Anh",
-          value: "Tiếng Anh",
-        },
-        {
-          text: "Toán học",
-          value: "Toán học",
+          text: "Nguyên lý hệ điều hành",
+          value: "Nguyên lý hệ điều hành",
         },
       ],
       filterMode: "tree",

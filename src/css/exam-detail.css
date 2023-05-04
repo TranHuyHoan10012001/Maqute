@@ -7,6 +7,9 @@
 .mainExamContainer {
   margin: 20px;
 }
+.key-answer {
+  margin: 20px;
+}
 .action-exam {
   display: flex;
   justify-content: space-around;

@@ -10,4 +10,13 @@ const handleUpdateKeyApi = (questionId, key) => {
 const handleKeyListApi = () => {
   return axios.get("/api/list-keys");
 };
-export { handleAddKeyApi, handleUpdateKeyApi, handleKeyListApi };
+
+const handleGetKeyByIdApi = (questionId) => {
+  return axios.get(`api/get-key-by-id?questionId=${questionId}`);
+};
+export {
+  handleAddKeyApi,
+  handleUpdateKeyApi,
+  handleKeyListApi,
+  handleGetKeyByIdApi,
+};

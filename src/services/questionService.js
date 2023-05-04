@@ -30,9 +30,28 @@ const handleDeleteQuestionApi = (questionId) => {
   return axios.delete("/api/delete-question", { data: { id: questionId } });
 };
 
+const handleUpdateQuestionApi = (
+  questionId,
+  content,
+  key,
+  subject,
+  category,
+  level
+) => {
+  return axios.patch("/api/update-question", {
+    questionId,
+    content,
+    key,
+    subject,
+    category,
+    level,
+  });
+};
+
 export {
   handleQuestionAddApi,
   handleGetQuestionByIdApi,
   handleQuestionListApi,
   handleDeleteQuestionApi,
+  handleUpdateQuestionApi,
 };

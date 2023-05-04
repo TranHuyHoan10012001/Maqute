@@ -9,7 +9,12 @@
   display: flex;
   justify-content: center;
 }
-
+.question-detail {
+  margin-top: 20px;
+}
+.container-add-question {
+  padding: 20px;
+}
 .key {
   margin-bottom: 10px;
   display: flex;

@@ -23,7 +23,7 @@ jobs:
       #       SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
       - name: 6. Update code coverage badge
         run: |
-          npx update-badge
+          npx update-badge --set 70
 
       #   - name: Set code coverage commit status 📫
       #     run: npx -p check-code-coverage set-gh-status

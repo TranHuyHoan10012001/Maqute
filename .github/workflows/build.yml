@@ -31,6 +31,6 @@ jobs:
       #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Autoupdate
-        uses: mikeal/publish-to-github-action@master
+        uses: mikeal/publish-to-github-action@feature/test-coverage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

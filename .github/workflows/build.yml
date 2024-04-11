@@ -16,8 +16,21 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Test and coverage
-        run: yarn jest --coverage
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        run: yarn jest --coverage --coverageReporters="json-summary"
+      #   - name: SonarCloud Scan
+      #     uses: SonarSource/sonarcloud-github-action@master
+      #     env:
+      #       SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
+      - name: 6. Update code coverage badge
+        run: |
+          npx update-badge
+
+      #   - name: Set code coverage commit status 📫
+      #     run: npx -p check-code-coverage set-gh-status
+      #     env:
+      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Autoupdate
+        uses: mikeal/publish-to-github-action@master
         env:
-          SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -15,23 +15,8 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: yarn
-      - name: Test and coverage
-        run: yarn jest --coverage --coverageReporters="json-summary"
-      #   - name: SonarCloud Scan
-      #     uses: SonarSource/sonarcloud-github-action@master
-      #     env:
-      #       SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
-      - name: 6. Update code coverage badge
-        run: |
-          npx update-badge --set 70
-
-      #   - name: Set code coverage commit status 📫
-      #     run: npx -p check-code-coverage set-gh-status
-      #     env:
-      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Autoupdate
-        uses: mikeal/publish-to-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: "feature/test-coverage"
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: TranHuyHoan10012001/Maqute

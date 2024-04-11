@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - feature/test-coverage
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -17,17 +17,8 @@ jobs:
         run: yarn
       - name: Test and coverage
         run: yarn jest --coverage
-      - name: Upload coverage reports to Codecov
+      - name: 7. SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: |
-          # Replace `linux` below with the appropriate OS
-          # Options are `alpine`, `linux`, `macos`, `windows`
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t d969a562-c38a-43f3-98cb-936c5bb0c4f9
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: TranHuyHoan10012001/Maqute
+          SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

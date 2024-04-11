@@ -1,6 +1,5 @@
 # Getting Started with Create React App
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TranHuyHoan10012001_Maqute&metric=coverage)](https://sonarcloud.io/summary/new_code?id=TranHuyHoan10012001_Maqute)
-
+![check-code-coverage](https://img.shields.io/badge/code--coverage-70%25-yellow)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

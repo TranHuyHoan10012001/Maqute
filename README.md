@@ -1,7 +1,5 @@
 # Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TranHuyHoan10012001_Maqute&metric=coverage)](https://sonarcloud.io/summary/new_code?id=TranHuyHoan10012001_Maqute)
 ## Available Scripts
 
 In the project directory, you can run:
